@@ -18,8 +18,6 @@ export default function SearchBox({ addPokemon }: { addPokemon: Function }) {
   useEffect(() => {
     if (!debouceSearch) return;
 
-    console.log('API call for ', debouceSearch);
-
     fetch(`/api/pokemons/${debouceSearch}`)
       .then((result) => {
         if (!result.ok) {
@@ -27,7 +25,7 @@ export default function SearchBox({ addPokemon }: { addPokemon: Function }) {
           return;
         }
 
-        result.json().then((data) => addPokemon(data));
+        result.json().then((data) => addPokemon(data.pokemon));
       })
       .catch((err) => alert(err));
 

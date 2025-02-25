@@ -1,6 +1,5 @@
 'use client';
 
-import PokemonCard from '@/components/card/pokemon-card';
 import SearchBox from '@/components/input/search-box';
 import PokemonList from '@/components/list/pokemon-list';
 import { IPokemon } from '@/types';
@@ -22,7 +21,6 @@ export default function Home() {
       const data = await result.json();
 
       setPokemonList(data);
-      console.log('Pokemon list is initialize');
     }
 
     getAllPokemon();

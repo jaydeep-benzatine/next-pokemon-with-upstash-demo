@@ -5,15 +5,11 @@ export default async function fetchBokemonByName(
 ): Promise<IPokemon> {
   const url = process.env.NEXT_POKEMON_API + `/${name}`;
 
-  console.log('URL', url);
-
   const result = await fetch(url);
 
   if (!result.ok) throw new Error('Pokemon not found');
 
   const parsedValue = await result.json();
-
-  console.log(parsedValue?.sprites);
 
   const data: IPokemon = {
     id: parsedValue?.id,
