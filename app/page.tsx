@@ -1,7 +1,37 @@
+'use client';
+
 import PokemonCard from '@/components/card/pokemon-card';
 import SearchBox from '@/components/input/search-box';
+import PokemonList from '@/components/list/pokemon-list';
+import { IPokemon } from '@/types';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
+  const [pokemonList, setPokemonList] = useState<IPokemon[]>([]);
+
+  function addPokemon(data: IPokemon): void {
+    setPokemonList((prev) => [...prev, data]);
+  }
+
+  useEffect(() => {
+    async function getAllPokemon() {
+      const result = await fetch('/api/pokemons');
+
+      if (!result.ok) return;
+
+      const data = await result.json();
+
+      setPokemonList(data);
+      console.log('Pokemon list is initialize');
+    }
+
+    getAllPokemon();
+
+    return () => {
+      setPokemonList([]);
+    };
+  }, []);
+
   return (
     <>
       <section id="hero" className="mt-5">
@@ -11,17 +41,13 @@ export default function Home() {
         </div>
       </section>
       <section id="search-section">
-        <SearchBox />
+        <SearchBox addPokemon={addPokemon} />
       </section>
       <main
         id="content"
         className="grid justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6"
       >
-        {Array(10)
-          .fill(null)
-          .map((it, idx) => (
-            <PokemonCard key={`pokemon-card-${idx}`} />
-          ))}
+        <PokemonList data={pokemonList} />
       </main>
     </>
   );
