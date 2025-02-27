@@ -1,50 +1,34 @@
-'use client';
+import getPokemons from '@/backend/data-access/getPokemons';
+import { PokemonList } from '@/components/pokemon-list';
+import { SearchBox } from '@/components/search-box';
 
-import SearchBox from '@/components/input/search-box';
-import PokemonList from '@/components/list/pokemon-list';
-import { IPokemon } from '@/types';
-import { useEffect, useState } from 'react';
+import type { IPokemon, ISearchParam } from '@/types';
 
-export default function Home() {
-  const [pokemonList, setPokemonList] = useState<IPokemon[]>([]);
+type IPageProps = { searchParams: ISearchParam };
 
-  function addPokemon(data: IPokemon): void {
-    setPokemonList((prev) => [...prev, data]);
+export default async function Home({ searchParams }: IPageProps) {
+  const search = searchParams.search as string;
+
+  let pokemonList: IPokemon[] = [];
+
+  try {
+    pokemonList = await getPokemons(search);
+  } catch (error) {
+    pokemonList = [];
   }
-
-  useEffect(() => {
-    async function getAllPokemon() {
-      const result = await fetch('/api/pokemons');
-
-      if (!result.ok) return;
-
-      const data = await result.json();
-
-      setPokemonList(data);
-    }
-
-    getAllPokemon();
-
-    return () => {
-      setPokemonList([]);
-    };
-  }, []);
 
   return (
     <>
-      <section id="hero" className="mt-5">
-        <div className="text-white text-center">
-          <h1 className="text-4xl fond-semibold">Welcome to Pokedex</h1>
-          <p className="mt-4 text-md">Pokemon information garage</p>
-        </div>
-      </section>
-      <section id="search-section">
-        <SearchBox addPokemon={addPokemon} />
-      </section>
-      <main
-        id="content"
-        className="grid justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6"
+      <section
+        id="header"
+        className="p-4 flex flex-col items-center gap-2 my-5"
       >
+        <h2 className="font-mono text-4xl font-semibold">Welcome to Pokedex</h2>
+        <p className="text-semibold text-base">pokemon information database</p>
+      </section>
+      <main id="content" className="flex-1 p-6">
+        <SearchBox />
+
         <PokemonList data={pokemonList} />
       </main>
     </>
