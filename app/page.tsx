@@ -4,10 +4,10 @@ import { SearchBox } from '@/components/search-box';
 
 import type { IPokemon, ISearchParam } from '@/types';
 
-type IPageProps = { searchParams: ISearchParam };
+type IPageProps = { searchParams: Promise<ISearchParam> };
 
 export default async function Home({ searchParams }: IPageProps) {
-  const search = searchParams.search as string;
+  const search = (await searchParams).search as string;
 
   let pokemonList: IPokemon[] = [];
 
