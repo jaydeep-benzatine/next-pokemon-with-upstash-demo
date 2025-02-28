@@ -1,22 +1,32 @@
 import type { IPokemon } from '@/types';
 import { PokemonCard } from './pokemon-card';
+import getPokemons from '@/backend/data-access/getPokemons';
 
 type IPokemonListProps = {
-  data: IPokemon[];
+  search: string;
 };
 
-export function PokemonList(props: IPokemonListProps) {
-  if (props.data.length === 0)
+export async function PokemonList(props: IPokemonListProps) {
+  const search = props.search;
+  let pokemonList: IPokemon[] = [];
+
+  try {
+    pokemonList = await getPokemons(search);
+  } catch (error) {
+    pokemonList = [];
+  }
+
+  if (pokemonList.length === 0)
     return (
       <div className="flex justify-center items-center w-full mt-48">
-        <p className="text-2xl">No pokemon found</p>
+        <p className="text-2xl">Loading Pokemons...</p>
       </div>
     );
 
   return (
     <>
       <div className="p-8 flex justify-center items-center">
-        {props.data.map((data) => (
+        {pokemonList.map((data) => (
           <PokemonCard key={data.id} data={data} />
         ))}
       </div>

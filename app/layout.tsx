@@ -27,7 +27,22 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="flex flex-col min-h-screen">{children}</div>
+        <div className="flex flex-col min-h-screen">
+          <section
+            id="header"
+            className="p-4 flex flex-col items-center gap-2 my-5"
+          >
+            <h2 className="font-mono text-4xl font-semibold">
+              Welcome to Pokedex
+            </h2>
+            <p className="text-semibold text-base">
+              pokemon information database
+            </p>
+          </section>
+          <main id="content" className="flex-1 p-6">
+            {children}
+          </main>
+        </div>
       </body>
     </html>
   );

@@ -1,7 +1,8 @@
 'use client';
 
+import { useDebounce } from '@/hooks/use-debounce';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { FormEvent } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 
 export function SearchBox() {
   const router = useRouter();
@@ -27,6 +28,7 @@ export function SearchBox() {
             id="search"
             className="w-3/4 rounded-full h-12 px-6 text-black"
             placeholder="search the pokemon to add into home page..."
+            // onChange={(evt) => setSearch(evt.target.value)}
           />
         </form>
       </section>
