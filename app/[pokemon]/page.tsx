@@ -1,3 +1,4 @@
+import PokemonPhotoGallery from '@/components/pokemon-photo-gallery';
 import { z } from 'zod';
 
 const schema = z.object({
@@ -27,13 +28,16 @@ async function getPokemonDetail(name: string) {
 
   let { success, data, error } = schema.safeParse(jsonResponse);
 
-  if (success && data?.moves) {
+  if (success) {
     data = {
       ...data,
       // @ts-expect-error
       moves: data?.moves.map((it) => {
         return it.move.name;
-      }) as string[],
+      }),
+      sprites:
+        Object.values(data?.sprites).filter((it) => typeof it === 'string') ||
+        [],
     };
   }
 
@@ -48,5 +52,12 @@ export default async function PokemonDetail({
   const pokemon = (await params).pokemon;
   const data = await getPokemonDetail(pokemon);
 
-  return <pre>{JSON.stringify(data, null, 2)}</pre>;
+  if (!data || !data.data) return <p>Not found</p>;
+
+  // return <pre>{JSON.stringify(data, null, 2)}</pre>;
+  return (
+    <>
+      <PokemonPhotoGallery sprites={data.data.sprites ?? []} />
+    </>
+  );
 }
